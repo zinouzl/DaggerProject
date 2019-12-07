@@ -59,6 +59,12 @@ dependencies {
     def rx_retrofit_adapter_version = '2.6.2'
     implementation "com.squareup.retrofit2:adapter-rxjava2:$rx_retrofit_adapter_version"
 
+
+    // Convert Reactive Streams to LiveData dependency
+    def reactivestreams_to_livedata_version = "2.1.0"
+    implementation "androidx.lifecycle:lifecycle-reactivestreams:$reactivestreams_to_livedata_version"
+
+
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'androidx.test.ext:junit:1.1.0'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.1.1'
