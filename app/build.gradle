@@ -51,6 +51,14 @@ dependencies {
     implementation "com.google.dagger:dagger-android-support:$dagger_version"
     annotationProcessor "com.google.dagger:dagger-android-processor:$dagger_version"
 
+    // RxJava dependency
+    def rxjava_version = '3.0.0-RC6'
+    implementation "io.reactivex.rxjava3:rxjava:$rxjava_version"
+
+    // Rx_Retrofit_Adapter dependency
+    def rx_retrofit_adapter_version = '2.6.2'
+    implementation "com.squareup.retrofit2:adapter-rxjava2:$rx_retrofit_adapter_version"
+
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'androidx.test.ext:junit:1.1.0'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.1.1'

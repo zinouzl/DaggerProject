@@ -1,12 +1,14 @@
 package com.example.daggerproject.retrofit.auth;
 
-import okhttp3.ResponseBody;
-import retrofit2.Call;
+import com.example.daggerproject.model.User;
+
+import io.reactivex.Flowable;
 import retrofit2.http.GET;
+import retrofit2.http.Path;
 
 public interface AuthApi {
 
 
-    @GET
-    Call<ResponseBody> getStuff();
+    @GET("Users/{id}")
+    Flowable<User> getUser(@Path("id") int id);
 }
