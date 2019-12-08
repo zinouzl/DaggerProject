@@ -6,6 +6,7 @@ import android.widget.ImageView;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.LiveDataReactiveStreams;
 import androidx.lifecycle.MediatorLiveData;
+import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModel;
 
 import com.bumptech.glide.RequestManager;
@@ -14,6 +15,7 @@ import com.example.daggerproject.retrofit.auth.AuthApi;
 
 import javax.inject.Inject;
 
+import io.reactivex.functions.Function;
 import io.reactivex.schedulers.Schedulers;
 
 public class AuthViewModel extends ViewModel {
@@ -22,7 +24,7 @@ public class AuthViewModel extends ViewModel {
     private final AuthApi authApi;
 
     @Inject
-    MediatorLiveData<User> authUser;
+    MediatorLiveData<AuthResources<User>> authUser;
 
     @Inject
     RequestManager requestManager;
@@ -39,22 +41,40 @@ public class AuthViewModel extends ViewModel {
     }
 
     public void authWithId(int id) {
-        final LiveData<User> source = LiveDataReactiveStreams.fromPublisher(
+        this.authUser.setValue(AuthResources.loading((User) null));
+        final LiveData<AuthResources<User>> source = LiveDataReactiveStreams.fromPublisher(
                 authApi.getUser(id)
                         .subscribeOn(Schedulers.io())
+                        .onErrorReturn(new Function<Throwable, User>() {
+                            @Override
+                            public User apply(Throwable throwable) throws Exception {
+                                User nullUser = new User();
+                                nullUser.setId(-1);
+                                return nullUser;
+                            }
+                        })
+                        .map(new Function<User, AuthResources<User>>() {
+                            @Override
+                            public AuthResources<User> apply(User user) throws Exception {
+                                if (user.getId() == -1) {
+                                    return AuthResources.error("Could not authenticate", null);
+                                }
+                                return AuthResources.authenticated(user);
+                            }
+                        })
 
         );
 
-        authUser.addSource(source, new androidx.lifecycle.Observer<User>() {
+        authUser.addSource(source, new Observer<AuthResources<User>>() {
             @Override
-            public void onChanged(User user) {
-                authUser.setValue(user);
+            public void onChanged(AuthResources<User> userAuthResources) {
+                authUser.setValue(userAuthResources);
                 authUser.removeSource(source);
             }
         });
     }
 
-    public LiveData<User> obserUser() {
+    public LiveData<AuthResources<User>> obserUser() {
         return authUser;
 
     }

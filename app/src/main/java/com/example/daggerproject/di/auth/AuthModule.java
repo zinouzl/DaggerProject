@@ -5,6 +5,7 @@ import androidx.lifecycle.MediatorLiveData;
 
 import com.example.daggerproject.model.User;
 import com.example.daggerproject.retrofit.auth.AuthApi;
+import com.example.daggerproject.ui.AuthResources;
 
 import dagger.Module;
 import dagger.Provides;
@@ -20,8 +21,8 @@ public class AuthModule {
 
 
     @Provides
-    static MediatorLiveData<User> provideMediatorLiveData() {
-        return new MediatorLiveData<User>();
+    static MediatorLiveData<AuthResources<User>> provideMediatorLiveData() {
+        return new MediatorLiveData<AuthResources<User>>();
     }
 
 }

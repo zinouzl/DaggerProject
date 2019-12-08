@@ -5,6 +5,7 @@ import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
@@ -13,6 +14,7 @@ import com.example.daggerproject.R;
 import com.example.daggerproject.model.User;
 import com.example.daggerproject.viewmodel.ViewModelProviderFactory;
 import com.google.android.material.button.MaterialButton;
+import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.textfield.TextInputEditText;
 
 import javax.inject.Inject;
@@ -28,6 +30,9 @@ public class AuthActivity extends DaggerAppCompatActivity {
 
     MaterialButton button;
 
+    ProgressBar
+            progressBar;
+
     @Inject
     ViewModelProviderFactory viewModelProviderFactory;
 
@@ -36,11 +41,12 @@ public class AuthActivity extends DaggerAppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_auth);
-        viewModel = ViewModelProviders.of(this,viewModelProviderFactory).get(AuthViewModel.class);
+        viewModel = ViewModelProviders.of(this, viewModelProviderFactory).get(AuthViewModel.class);
         viewModel.setActivityLogo((ImageView) findViewById(R.id.image_view));
 
         editText = findViewById(R.id.text_field);
         button = findViewById(R.id.button);
+        progressBar = findViewById(R.id.progress_circular);
         subsctibeObserver();
     }
 
@@ -60,6 +66,7 @@ public class AuthActivity extends DaggerAppCompatActivity {
         if (TextUtils.isEmpty(editText.getText().toString())) {
             return;
         } else {
+
             viewModel.authWithId(Integer.parseInt(editText.getText().toString()));
         }
 
@@ -67,16 +74,49 @@ public class AuthActivity extends DaggerAppCompatActivity {
 
 
     private void subsctibeObserver() {
-        viewModel.obserUser().observe(this, new Observer<User>() {
+        viewModel.obserUser().observe(this, new Observer<AuthResources<User>>() {
             @Override
-            public void onChanged(User user) {
-                if (user != null) {
-                    Log.d(TAG, "onChanged: " + user.getEmail());
-                }
+            public void onChanged(AuthResources<User> userAuthResources) {
+                if (userAuthResources != null) {
+                    Log.d(TAG, "onChanged: is being executed");
+                    switch (userAuthResources.status) {
 
+                        case LOADING: {
+                            showProgressBar(true);
+                            break;
+                        }
+                        case AUTHENTICATED: {
+                            showProgressBar(false);
+                            break;
+                        }
+                        case ERROR: {
+                            showProgressBar(false);
+                            Snackbar.make(button.getRootView(), "encountered a problem", Snackbar.LENGTH_SHORT).show();
+                            break;
+                        }
+                        case NOT_AUTHENTICATED: {
+                            showProgressBar(false);
+                            break;
+                        }
+                    }
+                }
             }
         });
+
+
     }
 
+
+    public void showProgressBar(boolean isVisible) {
+        if (isVisible) {
+            Log.d(TAG, "showProgressBar: True");
+            ;
+            progressBar.setVisibility(ProgressBar.VISIBLE);
+
+        } else {
+
+            progressBar.setVisibility(ProgressBar.INVISIBLE);
+        }
+    }
 
 }
