@@ -1,9 +1,11 @@
 package com.example.daggerproject.ui;
 
+import android.app.Activity;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 
@@ -66,7 +68,7 @@ public class AuthActivity extends DaggerAppCompatActivity {
         if (TextUtils.isEmpty(editText.getText().toString())) {
             return;
         } else {
-
+            hideKeyboard(this);
             viewModel.authWithId(Integer.parseInt(editText.getText().toString()));
         }
 
@@ -87,6 +89,7 @@ public class AuthActivity extends DaggerAppCompatActivity {
                         }
                         case AUTHENTICATED: {
                             showProgressBar(false);
+                            Log.d(TAG, "onChanged: login success " + userAuthResources.data.getUserName());
                             break;
                         }
                         case ERROR: {
@@ -117,6 +120,16 @@ public class AuthActivity extends DaggerAppCompatActivity {
 
             progressBar.setVisibility(ProgressBar.INVISIBLE);
         }
+    }
+
+    public void hideKeyboard(Activity activity) {
+        InputMethodManager inputMethodManager = (InputMethodManager) activity.getSystemService(Activity.INPUT_METHOD_SERVICE);
+        View view = getCurrentFocus();
+        if (view == null) {
+            view = new View(activity);
+        }
+
+        inputMethodManager.hideSoftInputFromWindow(view.getWindowToken(), 0);
     }
 
 }
