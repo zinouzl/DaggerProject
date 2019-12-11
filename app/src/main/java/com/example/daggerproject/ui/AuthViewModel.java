@@ -5,11 +5,10 @@ import android.widget.ImageView;
 
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.LiveDataReactiveStreams;
-import androidx.lifecycle.MediatorLiveData;
-import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModel;
 
 import com.bumptech.glide.RequestManager;
+import com.example.daggerproject.SessionManager;
 import com.example.daggerproject.model.User;
 import com.example.daggerproject.retrofit.auth.AuthApi;
 
@@ -23,8 +22,7 @@ public class AuthViewModel extends ViewModel {
 
     private final AuthApi authApi;
 
-    @Inject
-    MediatorLiveData<AuthResources<User>> authUser;
+    private SessionManager sessionManager;
 
     @Inject
     RequestManager requestManager;
@@ -34,15 +32,21 @@ public class AuthViewModel extends ViewModel {
 
 
     @Inject
-    public AuthViewModel(AuthApi authApi) {
+    public AuthViewModel(AuthApi authApi, SessionManager sessionManager) {
         super();
         this.authApi = authApi;
+        this.sessionManager = sessionManager;
 
     }
 
     public void authWithId(int id) {
-        this.authUser.setValue(AuthResources.loading((User) null));
-        final LiveData<AuthResources<User>> source = LiveDataReactiveStreams.fromPublisher(
+        sessionManager.authenticateWithId(getUser(id));
+
+    }
+
+
+    private LiveData<AuthResources<User>> getUser(int id) {
+        return LiveDataReactiveStreams.fromPublisher(
                 authApi.getUser(id)
                         .subscribeOn(Schedulers.io())
                         .onErrorReturn(new Function<Throwable, User>() {
@@ -64,18 +68,10 @@ public class AuthViewModel extends ViewModel {
                         })
 
         );
-
-        authUser.addSource(source, new Observer<AuthResources<User>>() {
-            @Override
-            public void onChanged(AuthResources<User> userAuthResources) {
-                authUser.setValue(userAuthResources);
-                authUser.removeSource(source);
-            }
-        });
     }
 
-    public LiveData<AuthResources<User>> obserUser() {
-        return authUser;
+    public LiveData<AuthResources<User>> observeAuthentification() {
+        return sessionManager.getAuthData();
 
     }
     public void setActivityLogo(ImageView imageView){

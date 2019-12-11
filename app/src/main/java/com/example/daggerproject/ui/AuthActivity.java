@@ -76,7 +76,7 @@ public class AuthActivity extends DaggerAppCompatActivity {
 
 
     private void subsctibeObserver() {
-        viewModel.obserUser().observe(this, new Observer<AuthResources<User>>() {
+        viewModel.observeAuthentification().observe(this, new Observer<AuthResources<User>>() {
             @Override
             public void onChanged(AuthResources<User> userAuthResources) {
                 if (userAuthResources != null) {
