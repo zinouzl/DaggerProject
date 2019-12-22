@@ -45,11 +45,13 @@ public class SessionManager {
 
             account = accountManager.getAccountsByType(TYPE_ACCOUNT)[0];
             id = Integer.parseInt(accountManager.getUserData(account, USER_ID));
+            authenticateWithId(getUser(id));
         } catch (Exception e) {
             e.fillInStackTrace();
             Log.d(TAG, "SessionManager: account is " + e.fillInStackTrace());
         }
         Log.d(TAG, "SessionManager: account is ");
+
         this.account = account;
     }
 

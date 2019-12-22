@@ -10,6 +10,7 @@ import androidx.annotation.NonNull;
 import com.example.daggerproject.R;
 import com.example.daggerproject.SessionManager;
 import com.example.daggerproject.ui.auth.AuthActivity;
+import com.example.daggerproject.ui.main.profile.ProfileFragment;
 
 import javax.inject.Inject;
 
@@ -25,8 +26,16 @@ public class MainActivity extends DaggerAppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        replaceFragment();
     }
 
+
+    private void replaceFragment() {
+
+        getSupportFragmentManager().beginTransaction()
+                .replace(R.id.fragment_container, new ProfileFragment())
+                .commit();
+    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {

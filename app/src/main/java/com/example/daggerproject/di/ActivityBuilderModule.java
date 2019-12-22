@@ -4,6 +4,8 @@ package com.example.daggerproject.di;
 import com.example.daggerproject.SplashActivity;
 import com.example.daggerproject.di.auth.AuthModule;
 import com.example.daggerproject.di.auth.AuthViewModelModule;
+import com.example.daggerproject.di.main.MainFragmentBuilderModule;
+import com.example.daggerproject.di.main.MainViewModelModule;
 import com.example.daggerproject.ui.auth.AuthActivity;
 import com.example.daggerproject.ui.main.MainActivity;
 
@@ -25,6 +27,9 @@ public abstract class ActivityBuilderModule {
     abstract SplashActivity contributeSplashActivity();
 
 
-    @ContributesAndroidInjector()
+    @ContributesAndroidInjector(modules = {
+            MainFragmentBuilderModule.class,
+            MainViewModelModule.class
+    })
     abstract MainActivity contributeMainActivity();
 }
