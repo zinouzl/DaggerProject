@@ -1,7 +1,9 @@
 package com.example.daggerproject.di;
 
 
+import android.accounts.AccountManager;
 import android.app.Application;
+import android.content.Context;
 import android.graphics.drawable.Drawable;
 
 import androidx.core.content.ContextCompat;
@@ -10,6 +12,7 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.RequestManager;
 import com.bumptech.glide.request.RequestOptions;
 import com.example.daggerproject.R;
+import com.example.daggerproject.retrofit.auth.AuthApi;
 
 import javax.inject.Singleton;
 
@@ -22,7 +25,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
 import static com.example.daggerproject.util.AppConstants.BASE_URL;
 
 @Module
-public class AppModule {
+public abstract class AppModule {
 
 
 
@@ -36,7 +39,18 @@ public class AppModule {
                 .build();
     }
 
+    @Singleton
+    @Provides
+    static AuthApi provideAuthApi(Retrofit retrofit) {
+        return retrofit.create(AuthApi.class);
+    }
 
+
+    @Singleton
+    @Provides
+    static AccountManager provideAccountManager(Context context) {
+        return AccountManager.get(context);
+    }
 
     @Singleton
     @Provides

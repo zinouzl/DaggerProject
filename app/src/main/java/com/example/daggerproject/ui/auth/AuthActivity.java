@@ -1,6 +1,7 @@
-package com.example.daggerproject.ui;
+package com.example.daggerproject.ui.auth;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
@@ -14,6 +15,7 @@ import androidx.lifecycle.ViewModelProviders;
 
 import com.example.daggerproject.R;
 import com.example.daggerproject.model.User;
+import com.example.daggerproject.ui.main.MainActivity;
 import com.example.daggerproject.viewmodel.ViewModelProviderFactory;
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.snackbar.Snackbar;
@@ -90,6 +92,9 @@ public class AuthActivity extends DaggerAppCompatActivity {
                         case AUTHENTICATED: {
                             showProgressBar(false);
                             Log.d(TAG, "onChanged: login success " + userAuthResources.data.getUserName());
+                            Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+                            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                            startActivity(intent);
                             break;
                         }
                         case ERROR: {

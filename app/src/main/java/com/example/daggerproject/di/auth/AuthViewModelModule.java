@@ -1,12 +1,10 @@
 package com.example.daggerproject.di.auth;
 
 
-import android.view.View;
-
 import androidx.lifecycle.ViewModel;
 
 import com.example.daggerproject.di.ViewModelKey;
-import com.example.daggerproject.ui.AuthViewModel;
+import com.example.daggerproject.ui.auth.AuthViewModel;
 
 import dagger.Binds;
 import dagger.Module;
