@@ -10,7 +10,7 @@ import androidx.annotation.NonNull;
 import com.example.daggerproject.R;
 import com.example.daggerproject.SessionManager;
 import com.example.daggerproject.ui.auth.AuthActivity;
-import com.example.daggerproject.ui.main.profile.ProfileFragment;
+import com.example.daggerproject.ui.main.posts.PostsFragment;
 
 import javax.inject.Inject;
 
@@ -33,7 +33,7 @@ public class MainActivity extends DaggerAppCompatActivity {
     private void replaceFragment() {
 
         getSupportFragmentManager().beginTransaction()
-                .replace(R.id.fragment_container, new ProfileFragment())
+                .replace(R.id.fragment_container, new PostsFragment())
                 .commit();
     }
 
