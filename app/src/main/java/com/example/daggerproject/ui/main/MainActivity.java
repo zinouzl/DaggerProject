@@ -9,6 +9,7 @@ import androidx.annotation.NonNull;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.navigation.NavController;
+import androidx.navigation.NavOptions;
 import androidx.navigation.Navigation;
 import androidx.navigation.ui.NavigationUI;
 
@@ -30,13 +31,17 @@ public class MainActivity extends DaggerAppCompatActivity implements NavigationV
     private DrawerLayout drawerLayout;
     private NavigationView navigationView;
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         setContentView(R.layout.activity_main);
-        drawerLayout = findViewById(R.id.drawer_layout);
         navigationView = findViewById(R.id.nav_view);
+        drawerLayout = findViewById(R.id.drawer_layout);
+
         init();
+
     }
 
 
@@ -46,6 +51,7 @@ public class MainActivity extends DaggerAppCompatActivity implements NavigationV
         NavigationUI.setupWithNavController(navigationView, navController);
         navigationView.setNavigationItemSelectedListener(this);
     }
+
 
 
     @Override
@@ -63,10 +69,20 @@ public class MainActivity extends DaggerAppCompatActivity implements NavigationV
                 intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                 startActivity(intent);
                 return true;
+
+
+            }
+            case android.R.id.home: {
+                if (drawerLayout.isDrawerOpen(GravityCompat.START)) {
+                    drawerLayout.closeDrawer(GravityCompat.START);
+                    return true;
+
+                }
             }
         }
 
-        return super.onOptionsItemSelected(item);
+
+        return false;
     }
 
     @Override
@@ -78,11 +94,16 @@ public class MainActivity extends DaggerAppCompatActivity implements NavigationV
     public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
         switch (menuItem.getItemId()) {
             case R.id.nav_profile: {
-                Navigation.findNavController(this, R.id.nav_host_fragment).navigate(R.id.profile_screen);
+                NavOptions navOptions = new NavOptions.Builder()
+                        .setPopUpTo(R.id.main, true)
+                        .build();
+
+                Navigation.findNavController(this, R.id.nav_host_fragment).navigate(R.id.profile_screen, null, navOptions);
                 break;
             }
             case R.id.nav_posts: {
-                Navigation.findNavController(this, R.id.nav_host_fragment).navigate(R.id.posts_screen);
+                if (Navigation.findNavController(this, R.id.nav_host_fragment).getCurrentDestination().getId() != R.id.posts_screen)
+                    Navigation.findNavController(this, R.id.nav_host_fragment).navigate(R.id.posts_screen);
                 break;
             }
 
@@ -91,5 +112,12 @@ public class MainActivity extends DaggerAppCompatActivity implements NavigationV
         menuItem.setChecked(true);
         drawerLayout.closeDrawer(GravityCompat.START);
         return true;
+
+
+    }
+
+    @Override
+    public boolean onSupportNavigateUp() {
+        return NavigationUI.navigateUp(Navigation.findNavController(this, R.id.nav_host_fragment), drawerLayout);
     }
 }

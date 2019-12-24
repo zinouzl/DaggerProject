@@ -8,5 +8,7 @@
     <string name="profile">Profile</string>
     <string name="posts">Posts</string>
     <string name="prfile">Profile</string>
+    <string name="open">Open navigation</string>
+    <string name="close">Close navigation</string>
 
 </resources>
