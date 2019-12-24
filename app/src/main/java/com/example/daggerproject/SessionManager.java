@@ -67,17 +67,19 @@ public class SessionManager {
                 public void onChanged(AuthResources<User> userAuthResources) {
                     cacheUser.setValue(userAuthResources);
                     cacheUser.removeSource(source);
-                    switch (userAuthResources.status) {
-                        case AUTHENTICATED: {
-                            account = new Account(cacheUser.toString(), TYPE_ACCOUNT);
-                            accountManager.addAccountExplicitly(account, null, null);
-                            accountManager.setUserData(account, USER_ID, String.valueOf(userAuthResources.data.getId()));
-                            break;
+                    if (account == null) {
+                        switch (userAuthResources.status) {
+                            case AUTHENTICATED: {
+                                account = new Account(cacheUser.toString(), TYPE_ACCOUNT);
+                                accountManager.addAccountExplicitly(account, null, null);
+                                accountManager.setUserData(account, USER_ID, String.valueOf(userAuthResources.data.getId()));
+                                break;
+
+                            }
+                            default:
+                                break;
 
                         }
-                        default:
-                            break;
-
                     }
 
 
@@ -88,6 +90,7 @@ public class SessionManager {
 
 
     public LiveData<AuthResources<User>> getUser(int id) {
+        this.id = id;
         return LiveDataReactiveStreams.fromPublisher(
                 authApi.getUser(id)
                         .subscribeOn(Schedulers.io())
@@ -121,6 +124,7 @@ public class SessionManager {
         cacheUser.setValue(AuthResources.<User>notAuthenticated());
         accountManager.removeAccountExplicitly(account);
         this.account = null;
+        this.id = -1;
     }
 
 

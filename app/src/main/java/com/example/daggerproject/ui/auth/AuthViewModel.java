@@ -9,7 +9,6 @@ import androidx.lifecycle.ViewModel;
 import com.bumptech.glide.RequestManager;
 import com.example.daggerproject.SessionManager;
 import com.example.daggerproject.model.User;
-import com.example.daggerproject.retrofit.auth.AuthApi;
 
 import javax.inject.Inject;
 
@@ -23,7 +22,7 @@ public class AuthViewModel extends ViewModel {
 
 
     @Inject
-    public AuthViewModel(AuthApi authApi, SessionManager sessionManager) {
+    public AuthViewModel(SessionManager sessionManager) {
         super();
 
         this.sessionManager = sessionManager;

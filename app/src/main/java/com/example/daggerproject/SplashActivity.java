@@ -10,8 +10,6 @@ import javax.inject.Inject;
 
 import dagger.android.support.DaggerAppCompatActivity;
 
-import static com.example.daggerproject.util.AppConstants.USER_ID;
-
 public class SplashActivity extends DaggerAppCompatActivity {
     @Inject
     SessionManager sessionManager;
@@ -24,9 +22,7 @@ public class SplashActivity extends DaggerAppCompatActivity {
         if (sessionManager.getAccount() == null)
             startActivity(new Intent(this, AuthActivity.class));
         else {
-            Intent intent = new Intent(this, MainActivity.class);
-            intent.putExtra(USER_ID, sessionManager.getId());
-            startActivity(intent);
+            startActivity(new Intent(this, MainActivity.class));
         }
 
 

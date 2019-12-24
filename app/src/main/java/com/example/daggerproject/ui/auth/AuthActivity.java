@@ -82,7 +82,7 @@ public class AuthActivity extends DaggerAppCompatActivity {
             @Override
             public void onChanged(AuthResources<User> userAuthResources) {
                 if (userAuthResources != null) {
-                    Log.d(TAG, "onChanged: is being executed");
+                    Log.d(TAG, "onChanged: is being executed" + userAuthResources.status);
                     switch (userAuthResources.status) {
 
                         case LOADING: {
